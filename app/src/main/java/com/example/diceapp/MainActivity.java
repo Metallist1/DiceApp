@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> diceRollHistory = new ArrayList<String>();
     private Spinner dropdownList;
     private LinearLayout diceLayout;
+    private ArrayList<String> lastRoll = new ArrayList<>();
 
     Random randomGenerator ;
     int totalDiceCount = 0;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addNewRoll(){
+        lastRoll.clear();
         String newAddition = "";
         for(int i = 0 ; i <totalDiceCount ; i++) {
             int rolledNumber = rollDice();
@@ -76,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         diceRollHistory.add(newAddition);
+        lastRoll.add(newAddition);
+
     }
 
 
@@ -130,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
             ImageView image = new ImageView(MainActivity.this);
 
             image.setImageDrawable(getResources().getDrawable(getResources().getIdentifier("@drawable/dice1", null, getPackageName())));
-
             image.setId(x);
             image.setLayoutParams(new LinearLayout.LayoutParams(200, 200));
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -158,12 +162,15 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putStringArrayList("History", diceRollHistory);
+        savedInstanceState.putStringArrayList("LastRoll", lastRoll);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         diceRollHistory = savedInstanceState.getStringArrayList("History");
+        lastRoll = savedInstanceState.getStringArrayList("LastRoll");
 
+    Toast.makeText(this, "" + lastRoll, Toast.LENGTH_SHORT).show();
     }
 }
