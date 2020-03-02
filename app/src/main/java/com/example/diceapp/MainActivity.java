@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0 ; i <totalDiceCount ; i++) {
             int rolledNumber = rollDice();
             changeDice(i , rolledNumber);
+            lastRoll.add(Integer.toString(rolledNumber));
             if(i + 1 <totalDiceCount) {
                 newAddition = newAddition + Integer.toString(rolledNumber) + " - ";
             }else{
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         diceRollHistory.add(newAddition);
-        lastRoll.add(newAddition);
 
     }
 
@@ -88,12 +88,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpTheGame(){
         randomGenerator = new Random(); //Set up random for generating value for dice
-        totalDiceCount = 2; // Set up initial dice count. For rolling in history
+        totalDiceCount = 0; // Set up initial dice count. For rolling in history
         setUpDropdown();
 
         diceLayout = (LinearLayout) findViewById(R.id.diceLayout);
 
-        setUpExtraDice();
+//setUpExtraDice();
     }
 
 
@@ -139,6 +139,28 @@ public class MainActivity extends AppCompatActivity {
             image.setLayoutParams(new LinearLayout.LayoutParams(200, 200));
             image.setScaleType(ImageView.ScaleType.FIT_CENTER);
             diceLayout.addView(image);
+
+        }
+    }
+
+    private void setUpExtraHistoryDice(ArrayList<String> listas){
+        diceLayout.removeAllViews();
+        for(int x=0;x<listas.size();x++) {
+
+
+            ImageView image = new ImageView(MainActivity.this);
+
+            String uri = "@drawable/dice"+ listas.get(x);  // where myresource (without the extension) is the file
+
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+
+            Drawable res = getResources().getDrawable(imageResource);
+            image.setImageDrawable(res);
+           image.setId(x);
+            image.setLayoutParams(new LinearLayout.LayoutParams(200, 200));
+            image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            diceLayout.addView(image);
+
         }
     }
 
@@ -160,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        System.out.println("Lol");
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putStringArrayList("History", diceRollHistory);
         savedInstanceState.putStringArrayList("LastRoll", lastRoll);
@@ -167,10 +190,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+        System.out.println("KK");
         super.onRestoreInstanceState(savedInstanceState);
         diceRollHistory = savedInstanceState.getStringArrayList("History");
         lastRoll = savedInstanceState.getStringArrayList("LastRoll");
+        System.out.println(lastRoll);
+setUpExtraHistoryDice(lastRoll);
 
-    Toast.makeText(this, "" + lastRoll, Toast.LENGTH_SHORT).show();
     }
 }
